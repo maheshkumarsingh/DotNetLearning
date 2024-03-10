@@ -23,6 +23,24 @@ app.Use(async (HttpContext context, RequestDelegate next) =>
     await next(context);
 });
 
+
+//use when middleware
+
+app.UseWhen(
+    context => context.Request.Query.ContainsKey("userName"),
+    app =>
+    {
+        app.Use(async (context,next) =>
+        {
+            await context.Response.WriteAsync("I am Mahesh using UseWhen");
+            await next(context);
+        });
+    });
+app.Use(async (HttpContext context, RequestDelegate next) =>
+{
+    await context.Response.WriteAsync("\nMiddleware 1");
+    await next(context);
+});
 //Custom Middleware class call
 //app.UseMiddleware<MyCustomMiddleware>();
 //made an extensible method to class custom middleware
